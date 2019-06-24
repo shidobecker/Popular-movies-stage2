@@ -9,9 +9,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.popular_movies_stage2.R;
-import com.example.android.popularmoviesstage1.api.MoviesApi;
-import com.example.android.popularmoviesstage1.api.RetrofitClient;
-import com.example.android.popularmoviesstage1.model.Movie;
+import com.example.android.popular_movies_stage2.api.MoviesApi;
+import com.example.android.popular_movies_stage2.api.RetrofitClient;
+import com.example.android.popular_movies_stage2.model.domain.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.Locale;

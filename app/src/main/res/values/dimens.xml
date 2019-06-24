@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <dimen name="details_title_container_height">120dp</dimen>
+  
+<!--  <dimen name="details_poster_min_height">270dp</dimen>
+  <dimen name="details_poster_min_width">185dp</dimen>-->
+
+  
+  <dimen name="details_default_margin_start">20dp</dimen>
+  <dimen name="details_default_margin_end">20dp</dimen>
+  <dimen name="details_title_text_size">32dp</dimen>
+
+  <dimen name="details_poster_min_height">190dp</dimen>
+  <dimen name="details_poster_min_width">120dp</dimen>
+
+  <dimen name="details_poster_margin_top">8dp</dimen>
+
+  <dimen name="details_information_year_text_size">24sp</dimen>
+  <dimen name="details_information_duration_text_size">24sp</dimen>
+  <dimen name="details_information_rating_text_size">16sp</dimen>
+
+  <dimen name ="details_information_margin_start">20dp</dimen>
+  <dimen name ="details_information_margin_top">8dp</dimen>
+
+  <dimen name="details_description_margin_top">16dp</dimen>
+
+</resources>

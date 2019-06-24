@@ -2,6 +2,7 @@ package com.example.android.popular_movies_stage2.model.domain;
 
 import com.google.gson.annotations.SerializedName;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -10,6 +11,7 @@ public class Review {
 
     @SerializedName("id")
     @PrimaryKey
+    @NonNull
     private String id;
 
     private int movieId;

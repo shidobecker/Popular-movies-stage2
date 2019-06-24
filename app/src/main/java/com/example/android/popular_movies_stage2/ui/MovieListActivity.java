@@ -1,8 +1,10 @@
 package com.example.android.popular_movies_stage2.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -134,20 +136,23 @@ public class MovieListActivity extends AppCompatActivity implements MovieAdapter
     private void setupRecyclerView() {
         movieAdapter = new MovieAdapter(this);
 
-        int orientation = getResources().getConfiguration().orientation;
-
-        int spanCount = 2;
-
-        if(orientation == Configuration.ORIENTATION_LANDSCAPE){
-            spanCount = 3;
-        }
-
         moviesRecyclerView.setLayoutManager(new GridLayoutManager(this,
-                spanCount,
+                calculateNoOfColumns(),
                 GridLayoutManager.VERTICAL, false));
 
         moviesRecyclerView.setAdapter(movieAdapter);
     }
+
+    public int calculateNoOfColumns() {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int scalingFactor = 200;
+        int noOfColumns = (int) (dpWidth / scalingFactor);
+        if (noOfColumns < 2)
+            noOfColumns = 2;
+        return noOfColumns;
+    }
+
 
     @Override
     public void onClickMovie(int id) {
