@@ -1,5 +1,6 @@
 package com.example.android.popular_movies_stage2.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -20,6 +21,7 @@ import com.example.android.popular_movies_stage2.model.remote.MoviesResult;
 import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
@@ -161,9 +163,15 @@ public class MovieListActivity extends AppCompatActivity implements MovieAdapter
         startActivity(intent);
     }
 
+
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        if(menu instanceof MenuBuilder){
+            MenuBuilder menuBuilder = (MenuBuilder) menu;
+            menuBuilder.setOptionalIconsVisible(true);
+        }
         return true;
     }
 

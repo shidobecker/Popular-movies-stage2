@@ -1,17 +1,20 @@
 <resources>
   <string name="app_name">Popular Movies 2</string>
 
-  <string name="API_KEY_TMDB">xxxxx</string>
+  <string name="API_KEY_TMDB">xxxxxxxxxxxx</string>
 
   <string name="error_fetching_movies">Error while trying to fetch movies. Please check your internet connection</string>
   <string name="error_fetching_movie">Error while trying to fetch this movie. Please check your internet connection</string>
   <string name="top_rated">Top Rated</string>
   <string name="popular">Popular</string>
+  <string name="favorites">Favorites</string>
 
   <string name="toast_message_intent_error">An error has occurred</string>
   <string name="release_date">Release date:</string>
   <string name="user_rating">User Rating:</string>
   <string name="overview">Overview:</string>
+  <string name="details_error_message_title">Sorry</string>
+  <string name="details_error_message_body">An error has occurred when trying to fetch this movie information</string>
 
 
 </resources>

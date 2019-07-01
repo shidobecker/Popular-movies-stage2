@@ -2,6 +2,7 @@ package com.example.android.popular_movies_stage2.model.domain;
 
 import com.google.gson.annotations.SerializedName;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -29,14 +30,27 @@ public class Movie {
     @SerializedName("release_date")
     private String releaseDate;
 
+    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
+    private byte[] image;
 
-    public Movie(int id, String originalTitle, String posterPath, String overview, Float userRating, String releaseDate) {
+
+
+    public Movie(int id, String originalTitle, String posterPath, String overview, Float userRating, String releaseDate, byte[] image) {
         this.id = id;
         this.originalTitle = originalTitle;
         this.posterPath = posterPath;
         this.overview = overview;
         this.userRating = userRating;
         this.releaseDate = releaseDate;
+        this.image = image;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     public String getOriginalTitle() {

@@ -2,21 +2,19 @@ package com.example.android.popular_movies_stage2.ui;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.popular_movies_stage2.R;
 import com.example.android.popular_movies_stage2.api.MoviesApi;
 import com.example.android.popular_movies_stage2.api.RetrofitClient;
+import com.example.android.popular_movies_stage2.databinding.ActivityDetailsBinding;
 import com.example.android.popular_movies_stage2.model.domain.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,33 +25,21 @@ public class DetailsActivity extends AppCompatActivity {
 
     private String apiKey;
 
-    private ProgressBar progressBar;
+    ActivityDetailsBinding binding;
 
-    private TextView errorMessage;
-
-    private ScrollView contentView;
-
-    private ImageView movieImage;
-
-    private TextView originalTitle;
-
-    private TextView releaseDate;
-
-    private TextView overview;
-
-    private TextView userRating;
-
+    private View movieInfoLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_details);
+
+        //Just to show or hide info layout
+        movieInfoLayout = findViewById(R.id.details_movie_information);
 
         if (getIntent().hasExtra(MovieListActivity.MOVIE_ID_EXTRA)) {
             movieId = getIntent().getIntExtra(MovieListActivity.MOVIE_ID_EXTRA, 0);
             apiKey = getString(R.string.API_KEY_TMDB);
-
-            setupViews();
 
             getMovieById();
 
@@ -64,17 +50,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     }
 
-    private void setupViews(){
-        contentView = findViewById(R.id.details_movie_content);
-        progressBar = findViewById(R.id.details_movie_progress_bar);
-        errorMessage = findViewById(R.id.details_movie_error_message);
-
-        movieImage = findViewById(R.id.details_movie_image);
-        originalTitle = findViewById(R.id.details_movie_original_title);
-        overview = findViewById(R.id.details_movie_overview);
-        userRating = findViewById(R.id.details_movie_user_rating);
-        releaseDate = findViewById(R.id.details_movie_release_date);
-    }
+    //TODO: SEARCH FOR THAT MOVIE ID ON ROOM DATABASE, IF THERE ISN'T , FETCH FROM API
 
 
     private void getMovieById() {
@@ -104,33 +80,40 @@ public class DetailsActivity extends AppCompatActivity {
 
 
     private void handleSuccess(Movie responseMovie) {
-        progressBar.setVisibility(View.GONE);
-        contentView.setVisibility(View.VISIBLE);
-        errorMessage.setVisibility(View.GONE);
 
-        originalTitle.setText(responseMovie.getOriginalTitle());
-        overview.setText(responseMovie.getOverview());
-        releaseDate.setText(responseMovie.getReleaseDate());
-        userRating.setText(String.format(Locale.getDefault(), responseMovie.getUserRating().toString()));
+        movieInfoLayout.setVisibility(View.VISIBLE);
+        binding.detailsProgressBar.setVisibility(View.GONE);
+        binding.detailsErrorTitle.setVisibility(View.GONE);
+        binding.detailsErrorMessageBody.setVisibility(View.GONE);
+
+        binding.detailsMovieOriginalTitle.setVisibility(View.VISIBLE);
+        binding.detailsMovieOriginalTitle.setText(responseMovie.getOriginalTitle());
+        binding.detailsMovieInformation.detailsMovieDescription.setText(responseMovie.getOverview());
+        binding.detailsMovieInformation.detailsMovieReleaseYear.setText(responseMovie.getReleaseDate());
+        binding.detailsMovieInformation.detailsMovieRating.setText(String.format(Locale.getDefault(), responseMovie.getUserRating().toString()));
 
         String posterPath = Movie.BASE_POSTER_PATH.concat(responseMovie.getPosterPath());
         Picasso.get().load(posterPath)
                 .error(R.drawable.ic_error_image)
-                .into(movieImage);
+                .into(binding.detailsMovieInformation.detailsMovieImage);
     }
 
     private void setLoading() {
-        progressBar.setVisibility(View.VISIBLE);
-        contentView.setVisibility(View.GONE);
-        errorMessage.setVisibility(View.GONE);
+        binding.detailsProgressBar.setVisibility(View.VISIBLE);
+        movieInfoLayout.setVisibility(View.GONE);
+        binding.detailsErrorTitle.setVisibility(View.GONE);
+        binding.detailsErrorMessageBody.setVisibility(View.GONE);
+        binding.detailsMovieOriginalTitle.setVisibility(View.GONE);
 
     }
 
 
     private void handleError() {
-        errorMessage.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
-        contentView.setVisibility(View.GONE);
+        binding.detailsMovieOriginalTitle.setVisibility(View.GONE);
+        binding.detailsErrorTitle.setVisibility(View.VISIBLE);
+        binding.detailsErrorMessageBody.setVisibility(View.VISIBLE);
+        binding.detailsProgressBar.setVisibility(View.GONE);
+        movieInfoLayout.setVisibility(View.GONE);
     }
 
 

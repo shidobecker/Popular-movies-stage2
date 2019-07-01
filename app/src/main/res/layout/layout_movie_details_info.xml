@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools">
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+      android:id="@+id/details_movie_image"
+      style="@style/DetailsPoster"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/details_movie_container" />
+
+    <TextView
+      android:id="@+id/details_movie_release_year"
+      style="@style/DetailsYear"
+      app:layout_constraintStart_toEndOf="@+id/details_movie_image"
+      app:layout_constraintTop_toBottomOf="@+id/details_movie_container"
+      tools:text="2015" />
+
+    <TextView
+      android:id="@+id/details_movie_rating"
+      style="@style/DetailsRating"
+      app:layout_constraintStart_toEndOf="@+id/details_movie_image"
+      app:layout_constraintTop_toBottomOf="@+id/details_movie_release_year"
+      tools:text="8.1/10" />
+
+    <ImageView
+      android:id="@+id/details_movie_favorite_image"
+      style="@style/DetailsFavorite"
+      app:layout_constraintStart_toEndOf="@+id/details_movie_image"
+      app:layout_constraintTop_toBottomOf="@+id/details_movie_rating"
+      app:srcCompat="@drawable/ic_star_outline" />
+
+    <TextView
+      android:id="@+id/details_movie_description"
+      style="@style/DetailsDescription"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/details_movie_image"
+      tools:text="Lorem ipsum dolor sit amet,  ante tristique sit amet sdfds sd fsdf ds fsdfds sdfdsfdsdsf  dsf ds" />
+
+
+    <View
+      style="@style/DetailsDivider"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/details_movie_description" />
+
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
