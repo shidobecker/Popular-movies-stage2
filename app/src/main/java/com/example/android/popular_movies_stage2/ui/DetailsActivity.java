@@ -5,19 +5,20 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.android.popular_movies_stage2.R;
-import com.example.android.popular_movies_stage2.api.MoviesApi;
-import com.example.android.popular_movies_stage2.api.RetrofitClient;
 import com.example.android.popular_movies_stage2.databinding.ActivityDetailsBinding;
 import com.example.android.popular_movies_stage2.model.domain.Movie;
+import com.example.android.popular_movies_stage2.repository.MoviesDatabase;
+import com.example.android.popular_movies_stage2.viewmodel.DetailsViewModel;
+import com.example.android.popular_movies_stage2.viewmodel.DetailsViewModelFactory;
 import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -28,6 +29,13 @@ public class DetailsActivity extends AppCompatActivity {
     ActivityDetailsBinding binding;
 
     private View movieInfoLayout;
+
+    private DetailsViewModelFactory detailsViewModelFactory;
+
+    private DetailsViewModel detailsViewModel;
+
+    private MoviesDatabase moviesDatabase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +49,16 @@ public class DetailsActivity extends AppCompatActivity {
             movieId = getIntent().getIntExtra(MovieListActivity.MOVIE_ID_EXTRA, 0);
             apiKey = getString(R.string.API_KEY_TMDB);
 
+            moviesDatabase = MoviesDatabase.getInstance(getApplicationContext());
+
             getMovieById();
+
+            binding.detailsMovieInformation.detailsMovieFavoriteImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    bookmarkMovie();
+                }
+            });
 
         } else {
             Toast.makeText(this, getString(R.string.toast_message_intent_error), Toast.LENGTH_LONG).show();
@@ -50,53 +67,82 @@ public class DetailsActivity extends AppCompatActivity {
 
     }
 
-    //TODO: SEARCH FOR THAT MOVIE ID ON ROOM DATABASE, IF THERE ISN'T , FETCH FROM API
-
 
     private void getMovieById() {
         setLoading();
 
-        MoviesApi moviesApi = RetrofitClient.getInstance(apiKey).getRetrofit().create(MoviesApi.class);
-        Call<Movie> movieById = moviesApi.getMovieById(movieId);
+        detailsViewModelFactory = new DetailsViewModelFactory(moviesDatabase, movieId, apiKey);
+        detailsViewModel = ViewModelProviders.of(this, detailsViewModelFactory).get(DetailsViewModel.class);
 
-        movieById.enqueue(new Callback<Movie>() {
+        detailsViewModel.getObservableMovie().observe(this, new Observer<Movie>() {
             @Override
-            public void onResponse(Call<Movie> call, Response<Movie> response) {
-                if (response.isSuccessful()) {
-                    handleSuccess(response.body());
+            public void onChanged(@Nullable Movie movie) {
+                if (movie != null) {
+                    handleSuccess(movie);
                 } else {
                     handleError();
                 }
             }
-
-            @Override
-            public void onFailure(Call<Movie> call, Throwable t) {
-                handleError();
-            }
         });
 
 
+        detailsViewModel.getIsBookmarked().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean isBookmarked) {
+                if (isBookmarked != null) {
+                    if (isBookmarked) {
+                        binding.detailsMovieInformation.detailsMovieFavoriteImage.setImageResource(R.drawable.ic_start_fill);
+                    } else {
+                        binding.detailsMovieInformation.detailsMovieFavoriteImage.setImageResource(R.drawable.ic_star_outline);
+                    }
+                }
+            }
+        });
     }
 
 
-    private void handleSuccess(Movie responseMovie) {
-
+    private void handleSuccess(Movie movie) {
         movieInfoLayout.setVisibility(View.VISIBLE);
         binding.detailsProgressBar.setVisibility(View.GONE);
         binding.detailsErrorTitle.setVisibility(View.GONE);
         binding.detailsErrorMessageBody.setVisibility(View.GONE);
 
         binding.detailsMovieOriginalTitle.setVisibility(View.VISIBLE);
-        binding.detailsMovieOriginalTitle.setText(responseMovie.getOriginalTitle());
-        binding.detailsMovieInformation.detailsMovieDescription.setText(responseMovie.getOverview());
-        binding.detailsMovieInformation.detailsMovieReleaseYear.setText(responseMovie.getReleaseDate());
-        binding.detailsMovieInformation.detailsMovieRating.setText(String.format(Locale.getDefault(), responseMovie.getUserRating().toString()));
+        binding.detailsMovieOriginalTitle.setText(movie.getOriginalTitle());
+        binding.detailsMovieInformation.detailsMovieDescription.setText(movie.getOverview());
+        binding.detailsMovieInformation.detailsMovieReleaseYear.setText(getMovieYear(movie.getReleaseDate()));
+        binding.detailsMovieInformation.detailsMovieRating.setText(String.format(Locale.getDefault(),
+                movie.getUserRating().toString()));
 
-        String posterPath = Movie.BASE_POSTER_PATH.concat(responseMovie.getPosterPath());
+        String posterPath = Movie.BASE_POSTER_PATH.concat(movie.getPosterPath());
         Picasso.get().load(posterPath)
                 .error(R.drawable.ic_error_image)
                 .into(binding.detailsMovieInformation.detailsMovieImage);
     }
+
+    private String getMovieYear(String releaseDate) {
+        try {
+            return releaseDate.substring(0, 4);
+        } catch (IndexOutOfBoundsException i) {
+            return releaseDate;
+        }
+
+    }
+
+
+    private void bookmarkMovie() {
+        Boolean bookmarked = detailsViewModel.getIsBookmarked().getValue();
+        if (bookmarked != null) {
+            if (bookmarked) {
+                //TODO: REMOVE MOVIE FROM BOOKMARK
+                detailsViewModel.getIsBookmarked().setValue(false);
+            } else {
+                detailsViewModel.getIsBookmarked().setValue(true);
+                //TODO: ADD MOVIE TO BOOKMARK
+            }
+        }
+    }
+
 
     private void setLoading() {
         binding.detailsProgressBar.setVisibility(View.VISIBLE);
@@ -104,7 +150,6 @@ public class DetailsActivity extends AppCompatActivity {
         binding.detailsErrorTitle.setVisibility(View.GONE);
         binding.detailsErrorMessageBody.setVisibility(View.GONE);
         binding.detailsMovieOriginalTitle.setVisibility(View.GONE);
-
     }
 
 

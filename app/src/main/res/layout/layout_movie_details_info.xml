@@ -30,6 +30,7 @@
     <ImageView
       android:id="@+id/details_movie_favorite_image"
       style="@style/DetailsFavorite"
+      android:checked="false"
       app:layout_constraintStart_toEndOf="@+id/details_movie_image"
       app:layout_constraintTop_toBottomOf="@+id/details_movie_rating"
       app:srcCompat="@drawable/ic_star_outline" />
