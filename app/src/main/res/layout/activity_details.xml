@@ -1,58 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools">
 
-  <androidx.constraintlayout.widget.ConstraintLayout
+  <androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.DetailsActivity">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-      android:id="@+id/details_movie_container"
-      style="@style/DetailTitleContainer"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent">
-
-      <TextView
-        android:id="@+id/details_movie_original_title"
-        style="@style/DetailsTitle"
-        tools:text="Original Title" />
-
-      <TextView
-        android:id="@+id/details_error_title"
-        style="@style/DetailsTitle"
-        android:text="@string/details_error_message_title"
-        android:visibility="gone" />
-
-    </LinearLayout>
-
-    <ProgressBar
-      android:id="@+id/details_progress_bar"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/details_movie_container"
-      style="@style/DetailsProgressBar" />
-
-    <TextView
-      android:id="@+id/details_error_message_body"
-      android:text="@string/details_error_message_body"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/details_movie_container"
-      style="@style/DetailsErrorMessage" />
-
-    <include
-      android:layout_marginTop="@dimen/details_default_margin"
-      android:id="@+id/details_movie_information"
-      layout="@layout/layout_movie_details_info"
+    <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/details_movie_container" />
+      android:layout_height="match_parent"
+      tools:context=".ui.DetailsActivity">
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+      <LinearLayout
+        android:id="@+id/details_movie_container"
+        style="@style/DetailTitleContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+          android:id="@+id/details_movie_original_title"
+          style="@style/DetailsTitle"
+          tools:text="Original Title" />
+
+        <TextView
+          android:id="@+id/details_error_title"
+          style="@style/DetailsTitle"
+          android:text="@string/details_error_message_title"
+          android:visibility="gone" />
+
+      </LinearLayout>
+
+      <ProgressBar
+        android:id="@+id/details_progress_bar"
+        style="@style/DetailsProgressBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/details_movie_container" />
+
+      <TextView
+        android:id="@+id/details_error_message_body"
+        style="@style/DetailsErrorMessage"
+        android:text="@string/details_error_message_body"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/details_movie_container" />
+
+      <include
+        android:id="@+id/details_movie_information"
+        layout="@layout/layout_movie_details_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/details_default_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/details_movie_container" />
+
+
+      <!-- Reviews -->
+
+      <TextView
+        android:id="@+id/details_review_title"
+        android:text="@string/reviews"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/details_movie_information"
+        style="@style/ExtraInfoTitle" />
+
+      <ProgressBar
+        android:id="@+id/reviews_progress_bar"
+        style="@style/DetailsProgressBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/details_review_title" />
+
+      <TextView
+        style="@style/ExtraInfoErrorMessage"
+        android:id="@+id/details_reviews_error"
+        android:layout_marginStart="@dimen/details_default_margin_start"
+        android:text="@string/review_list_connection_message"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/details_review_title" />
+
+      <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/details_reviews_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_small_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/details_review_title"
+        tools:listitem="@layout/review_list_item" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+  </androidx.core.widget.NestedScrollView>
 </layout>

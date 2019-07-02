@@ -1,21 +1,20 @@
 package com.example.android.popular_movies_stage2.ui;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.android.popular_movies_stage2.R;
 import com.example.android.popular_movies_stage2.databinding.ActivityDetailsBinding;
 import com.example.android.popular_movies_stage2.model.domain.Movie;
+import com.example.android.popular_movies_stage2.model.domain.Review;
 import com.example.android.popular_movies_stage2.repository.MoviesDatabase;
 import com.example.android.popular_movies_stage2.viewmodel.DetailsViewModel;
 import com.example.android.popular_movies_stage2.viewmodel.DetailsViewModelFactory;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
@@ -23,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -37,6 +37,8 @@ public class DetailsActivity extends AppCompatActivity {
     private DetailsViewModel detailsViewModel;
 
     private MoviesDatabase moviesDatabase;
+
+    private ReviewAdapter reviewAdapter;
 
 
     @Override
@@ -55,17 +57,45 @@ public class DetailsActivity extends AppCompatActivity {
 
             getMovieById();
 
-            binding.detailsMovieInformation.detailsMovieFavoriteImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    bookmarkMovie();
-                }
-            });
+            setFavoriteClick();
+
+            setupReviewAdapter();
 
         } else {
             Toast.makeText(this, getString(R.string.toast_message_intent_error), Toast.LENGTH_LONG).show();
             finish();
         }
+
+    }
+
+
+    private void setFavoriteClick() {
+        binding.detailsMovieInformation.detailsMovieFavoriteImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bookmarkMovie();
+            }
+        });
+    }
+
+
+    private void setupReviewAdapter() {
+        reviewAdapter = new ReviewAdapter();
+        binding.detailsReviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        binding.detailsReviewsRecyclerView.setAdapter(reviewAdapter);
+
+        detailsViewModel.getObservableReviews().observe(this, new Observer<List<Review>>() {
+            @Override
+            public void onChanged(@Nullable List<Review> reviews) {
+                if(reviews != null){
+                    handleReviewSuccess(reviews);
+                }else{
+                    handleReviewError();
+                }
+            }
+        });
+
 
     }
 
@@ -80,9 +110,9 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable Movie movie) {
                 if (movie != null) {
-                    handleSuccess(movie);
+                    handleMovieSuccess(movie);
                 } else {
-                    handleError();
+                    handleMovieError();
                 }
             }
         });
@@ -100,10 +130,12 @@ public class DetailsActivity extends AppCompatActivity {
                 }
             }
         });
+
+        detailsViewModel.fetchMovieReviews(movieId, apiKey);
     }
 
 
-    private void handleSuccess(Movie movie) {
+    private void handleMovieSuccess(Movie movie) {
         movieInfoLayout.setVisibility(View.VISIBLE);
         binding.detailsProgressBar.setVisibility(View.GONE);
         binding.detailsErrorTitle.setVisibility(View.GONE);
@@ -122,6 +154,38 @@ public class DetailsActivity extends AppCompatActivity {
                 .networkPolicy(NetworkPolicy.OFFLINE)
                 .into(binding.detailsMovieInformation.detailsMovieImage);
 
+
+    }
+
+    private void handleMovieError() {
+        binding.detailsMovieOriginalTitle.setVisibility(View.GONE);
+        binding.detailsErrorTitle.setVisibility(View.VISIBLE);
+        binding.detailsErrorMessageBody.setVisibility(View.VISIBLE);
+        binding.detailsProgressBar.setVisibility(View.GONE);
+        movieInfoLayout.setVisibility(View.GONE);
+    }
+
+
+    private void handleReviewSuccess(List<Review> reviews) {
+        binding.reviewsProgressBar.setVisibility(View.GONE);
+
+        //In case there's no reviews for that movie, but no error occurred
+        if (reviews.isEmpty()) {
+            binding.detailsReviewsError.setVisibility(View.VISIBLE);
+            binding.detailsReviewsError.setText(getString(R.string.review_no_review_found));
+        } else {
+            binding.detailsReviewsError.setVisibility(View.GONE);
+        }
+
+        reviewAdapter.setReviewList(reviews);
+
+    }
+
+    private void handleReviewError() {
+        binding.reviewsProgressBar.setVisibility(View.GONE);
+
+        binding.detailsReviewsError.setVisibility(View.VISIBLE);
+        binding.detailsReviewsError.setText(getString(R.string.review_list_connection_message));
 
     }
 
@@ -153,15 +217,9 @@ public class DetailsActivity extends AppCompatActivity {
         binding.detailsErrorTitle.setVisibility(View.GONE);
         binding.detailsErrorMessageBody.setVisibility(View.GONE);
         binding.detailsMovieOriginalTitle.setVisibility(View.GONE);
-    }
 
+        binding.reviewsProgressBar.setVisibility(View.VISIBLE);
 
-    private void handleError() {
-        binding.detailsMovieOriginalTitle.setVisibility(View.GONE);
-        binding.detailsErrorTitle.setVisibility(View.VISIBLE);
-        binding.detailsErrorMessageBody.setVisibility(View.VISIBLE);
-        binding.detailsProgressBar.setVisibility(View.GONE);
-        movieInfoLayout.setVisibility(View.GONE);
     }
 
 

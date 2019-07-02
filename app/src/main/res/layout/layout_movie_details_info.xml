@@ -36,6 +36,13 @@
       app:srcCompat="@drawable/ic_star_outline" />
 
     <TextView
+      android:id="@+id/details_movie_videos"
+      style="@style/DetailsVideo"
+      app:layout_constraintStart_toEndOf="@+id/details_movie_image"
+      app:layout_constraintTop_toBottomOf="@+id/details_movie_favorite_image"
+      android:text="@string/videos" />
+
+    <TextView
       android:id="@+id/details_movie_description"
       style="@style/DetailsDescription"
       app:layout_constraintEnd_toEndOf="parent"

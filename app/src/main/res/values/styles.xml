@@ -49,6 +49,11 @@
     <item name="android:textSize">@dimen/details_information_year_text_size</item>
   </style>
 
+  <style name="DetailsVideo" parent="DetailsInformation">
+    <item name="android:textAppearance">@style/TextAppearance.AppCompat.Headline</item>
+    <item name="android:textColor">@color/colorMainText</item>
+    <item name="android:layout_marginTop">@dimen/default_medium_margin</item>
+  </style>
 
   <style name="DetailsRating" parent="DetailsInformation">
     <item name="android:textColor">@color/black</item>
@@ -78,7 +83,7 @@
   </style>
 
 
-  <style name="TrailersListDivider" parent="DetailsDivider">
+  <style name="VideosListDivider" parent="DetailsDivider">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">1.5dp</item>
     <item name="android:background">@color/colorMainText</item>
@@ -114,6 +119,50 @@
     <item name="android:layout_marginEnd">@dimen/details_default_margin_end</item>
     <item name="android:textColor">@color/colorMainText</item>
     <item name="android:textSize">@dimen/details_error_message_title_size</item>
+    <item name="android:visibility">gone</item>
+  </style>
+
+  <style name="ReviewListAuthor">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginStart">@dimen/details_default_margin_start</item>
+    <item name="android:layout_marginTop">@dimen/default_small_margin</item>
+    <item name="android:textAppearance">@android:style/TextAppearance.Holo.Large</item>
+    <item name="android:textColor">@color/colorMainText</item>
+  </style>
+
+  <style name="ReviewListContent">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginStart">@dimen/details_default_margin_start</item>
+    <item name="android:layout_marginTop">@dimen/default_small_margin</item>
+    <item name="android:layout_marginEnd">@dimen/details_default_margin_end</item>
+    <item name="android:textAppearance">@android:style/TextAppearance.Holo.Small</item>
+    <item name="android:textColor">@color/colorMainText</item>
+  </style>
+
+  <style name="ExtraInfoTitle">
+    <item name="android:layout_marginTop">@dimen/details_default_margin</item>
+    <item name="android:textAppearance">@style/TextAppearance.AppCompat.Headline</item>
+    <item name="android:textColor">@color/colorMainText</item>
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+  </style>
+
+
+  <style name="VideosProgressBar" parent="DetailsProgressBar">
+    <item name="android:layout_marginTop">@dimen/default_small_margin</item>
+    <item name="android:layout_marginBottom">@dimen/default_small_margin</item>
+  </style>
+
+  <style name="ExtraInfoErrorMessage">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginStart">@dimen/details_default_margin_start</item>
+    <item name="android:layout_marginTop">@dimen/default_small_margin</item>
+    <item name="android:layout_marginEnd">@dimen/default_small_margin</item>
+    <item name="android:layout_marginBottom">@dimen/default_small_margin</item>
+    <item name="android:textColor">@color/colorMainText</item>
     <item name="android:visibility">gone</item>
   </style>
 

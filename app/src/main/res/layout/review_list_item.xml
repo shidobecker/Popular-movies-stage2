@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+
+  <TextView
+    android:id="@+id/review_list_author"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="Author"
+    style="@style/ReviewListAuthor" />
+
+  <TextView
+    android:id="@+id/review_list_content"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/review_list_author"
+    tools:text="Content"
+    style="@style/ReviewListContent" />
+
+  <View
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/review_list_content"
+    style="@style/DetailsDivider" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -68,8 +68,6 @@ public class MovieListActivity extends AppCompatActivity implements MovieAdapter
 
         String searchCriteria = MoviesPreferences.getLastSearchCriteria(this);
 
-        Log.w("CRITERIA", searchCriteria);
-
         if (searchCriteria.equals(SearchCriteria.FAVORITES.name())) {
             getMoviesByFavorites();
         } else if (searchCriteria.equals(SearchCriteria.POPULAR.name())) {

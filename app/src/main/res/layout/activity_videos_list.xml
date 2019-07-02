@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools">
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Videos -->
+
+    <TextView
+      android:id="@+id/details_review_title"
+      style="@style/ExtraInfoTitle"
+      android:layout_marginTop="@dimen/details_default_margin"
+      android:text="@string/videos"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+      android:id="@+id/videos_progress_bar"
+      style="@style/VideosProgressBar"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+      android:id="@+id/details_videos_error"
+      android:text="@string/videos_list_connection_message"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      style="@style/ExtraInfoErrorMessage" />
+
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/details_trailer_recycler_view"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/default_small_margin"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/details_review_title"
+      tools:listitem="@layout/videos_list_item" />
+
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

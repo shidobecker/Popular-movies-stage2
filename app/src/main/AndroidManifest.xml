@@ -24,6 +24,14 @@
       android:parentActivityName=".ui.MovieListActivity">
 
     </activity>
+
+
+    <activity
+      android:name=".ui.VideosActivity"
+      android:parentActivityName=".ui.DetailsActivity">
+
+    </activity>
+
   </application>
 
 </manifest>

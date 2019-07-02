@@ -8,6 +8,9 @@
 
   <dimen name="details_default_margin">8dp</dimen>
 
+  <dimen name="default_small_margin">8dp</dimen>
+  <dimen name="default_medium_margin">16dp</dimen>
+
   <dimen name="details_error_message_title_size">24sp</dimen>
   
   <dimen name="details_default_margin_start">20dp</dimen>
