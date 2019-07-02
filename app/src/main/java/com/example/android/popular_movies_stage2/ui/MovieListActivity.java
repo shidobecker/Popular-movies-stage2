@@ -1,148 +1,164 @@
 package com.example.android.popular_movies_stage2.ui;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.popular_movies_stage2.R;
-import com.example.android.popular_movies_stage2.api.MoviesApi;
-import com.example.android.popular_movies_stage2.api.RetrofitClient;
+import com.example.android.popular_movies_stage2.databinding.ActivityMovieListBinding;
 import com.example.android.popular_movies_stage2.model.domain.Movie;
-import com.example.android.popular_movies_stage2.model.remote.MoviesResult;
+import com.example.android.popular_movies_stage2.repository.MoviesDatabase;
+import com.example.android.popular_movies_stage2.utils.MoviesPreferences;
+import com.example.android.popular_movies_stage2.utils.SearchCriteria;
+import com.example.android.popular_movies_stage2.viewmodel.MovieListViewModel;
+import com.example.android.popular_movies_stage2.viewmodel.MovieListViewModelFactory;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MovieListActivity extends AppCompatActivity implements MovieAdapter.MovieClickListener {
 
-    private RecyclerView moviesRecyclerView;
-
     private MovieAdapter movieAdapter;
-
-    private ProgressBar progressBar;
-
-    private TextView errorMessage;
 
     private String apiKey;
 
     static final String MOVIE_ID_EXTRA = "MOVIE_ID_EXTRA";
 
+    private MovieListViewModel viewModel;
+
+    ActivityMovieListBinding binding;
+
+    private MoviesDatabase database;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        moviesRecyclerView = findViewById(R.id.movies_recycler_view);
-        progressBar = findViewById(R.id.movies_progress_bar);
-        errorMessage = findViewById(R.id.movies_error_message);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_list);
 
         apiKey = getString(R.string.API_KEY_TMDB);
 
+        database = MoviesDatabase.getInstance(getApplicationContext());
+
+        setupViewModel();
+
         setupRecyclerView();
 
-        getMoviesByPopularity();
+        observeMovies();
+
+    }
+
+    private void setupViewModel() {
+        MovieListViewModelFactory viewModelFactory = new MovieListViewModelFactory(apiKey, database);
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MovieListViewModel.class);
+
+        String searchCriteria = MoviesPreferences.getLastSearchCriteria(this);
+
+        Log.w("CRITERIA", searchCriteria);
+
+        if (searchCriteria.equals(SearchCriteria.FAVORITES.name())) {
+            getMoviesByFavorites();
+        } else if (searchCriteria.equals(SearchCriteria.POPULAR.name())) {
+            getMoviesByPopularity();
+        } else {
+            getMoviesByTopRated();
+        }
+    }
+
+    private void observeMovies() {
+        viewModel.getObservableMovies().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(@Nullable List<Movie> movies) {
+                if (movies != null) {
+                    handleSuccess();
+                    movieAdapter.setMovies(movies);
+                } else {
+                    handleError();
+                    movieAdapter.setMovies(null);
+                }
+            }
+        });
 
     }
 
     private void getMoviesByPopularity() {
+        MoviesPreferences.setLastSearchCriteria(this, SearchCriteria.POPULAR);
+
         setLoading();
 
-        MoviesApi moviesApi = RetrofitClient.getInstance(apiKey).getRetrofit().create(MoviesApi.class);
-        Call<MoviesResult> popularMovies = moviesApi.getPopularMovies();
-
-        popularMovies.enqueue(new Callback<MoviesResult>() {
-            @Override
-            public void onResponse(Call<MoviesResult> call, Response<MoviesResult> response) {
-                if (response.isSuccessful()) {
-                    handleSuccess(response);
-                } else {
-                    handleError();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MoviesResult> call, Throwable t) {
-                handleError();
-
-            }
-        });
+        viewModel.getMoviesByPopularity();
     }
 
     private void getMoviesByTopRated() {
+        MoviesPreferences.setLastSearchCriteria(this, SearchCriteria.TOP_RATED);
+
         setLoading();
 
-        MoviesApi moviesApi = RetrofitClient.getInstance(apiKey).getRetrofit().create(MoviesApi.class);
-        Call<MoviesResult> popularMovies = moviesApi.getTopRatedMovies();
+        viewModel.getMoviesByTopRated();
+    }
 
-        popularMovies.enqueue(new Callback<MoviesResult>() {
+    private void getMoviesByFavorites() {
+        MoviesPreferences.setLastSearchCriteria(this, SearchCriteria.FAVORITES);
+
+        setLoading();
+
+        viewModel.getMoviesByFavorites();
+
+        viewModel.getHasFavoriteMovies().observe(this, new Observer<Boolean>() {
             @Override
-            public void onResponse(Call<MoviesResult> call, Response<MoviesResult> response) {
-                if (response.isSuccessful()) {
-                    handleSuccess(response);
-                } else {
-                    handleError();
+            public void onChanged(@Nullable Boolean hasFavorites) {
+                if (hasFavorites != null && !hasFavorites) {
+                    Toast.makeText(MovieListActivity.this, getString(R.string.no_favorites), Toast.LENGTH_SHORT).show();
+                    handleSuccess();
                 }
-            }
-
-            @Override
-            public void onFailure(Call<MoviesResult> call, Throwable t) {
-                handleError();
             }
         });
     }
 
 
-    private void handleSuccess(Response<MoviesResult> response) {
-        final ArrayList<Movie> movies;
 
-        MoviesResult moviesResult = response.body();
-        movies = new ArrayList<>(moviesResult.getMovies());
-
-        progressBar.setVisibility(View.GONE);
-        moviesRecyclerView.setVisibility(View.VISIBLE);
-        errorMessage.setVisibility(View.GONE);
-        movieAdapter.setMovies(movies);
+    private void handleSuccess() {
+        binding.moviesProgressBar.setVisibility(View.GONE);
+        binding.moviesRecyclerView.setVisibility(View.VISIBLE);
+        binding.moviesErrorMessage.setVisibility(View.GONE);
     }
 
     private void setLoading() {
-        progressBar.setVisibility(View.VISIBLE);
-        moviesRecyclerView.setVisibility(View.GONE);
-        errorMessage.setVisibility(View.GONE);
-
+        binding.moviesProgressBar.setVisibility(View.VISIBLE);
+        binding.moviesRecyclerView.setVisibility(View.GONE);
+        binding.moviesErrorMessage.setVisibility(View.GONE);
     }
 
 
     private void handleError() {
-        errorMessage.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
-        moviesRecyclerView.setVisibility(View.GONE);
-        movieAdapter.setMovies(null);
+        binding.moviesErrorMessage.setVisibility(View.VISIBLE);
+        binding.moviesProgressBar.setVisibility(View.GONE);
+        binding.moviesRecyclerView.setVisibility(View.GONE);
     }
 
 
     private void setupRecyclerView() {
         movieAdapter = new MovieAdapter(this);
 
-        moviesRecyclerView.setLayoutManager(new GridLayoutManager(this,
+        binding.moviesRecyclerView.setLayoutManager(new GridLayoutManager(this,
                 calculateNoOfColumns(),
                 GridLayoutManager.VERTICAL, false));
 
-        moviesRecyclerView.setAdapter(movieAdapter);
+        binding.moviesRecyclerView.setAdapter(movieAdapter);
     }
 
     public int calculateNoOfColumns() {
@@ -168,7 +184,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieAdapter
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
-        if(menu instanceof MenuBuilder){
+        if (menu instanceof MenuBuilder) {
             MenuBuilder menuBuilder = (MenuBuilder) menu;
             menuBuilder.setOptionalIconsVisible(true);
         }
@@ -184,6 +200,10 @@ public class MovieListActivity extends AppCompatActivity implements MovieAdapter
         }
         if (itemId == R.id.action_topRated) {
             getMoviesByTopRated();
+        }
+
+        if (itemId == R.id.action_favorites) {
+            getMoviesByFavorites();
         }
 
         return super.onOptionsItemSelected(item);

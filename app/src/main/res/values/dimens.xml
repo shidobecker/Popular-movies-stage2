@@ -29,4 +29,7 @@
   <dimen name="details_description_margin_top">16dp</dimen>
   <dimen name="trailers_list_margin_top">20dp</dimen>
 
+  <dimen name="details_favorite_image_width">48dp</dimen>
+  <dimen name="details_favorite_image_height">48dp</dimen>
+
 </resources>

@@ -4,6 +4,7 @@ package com.example.android.popular_movies_stage2.viewmodel;
 import com.example.android.popular_movies_stage2.api.MoviesApi;
 import com.example.android.popular_movies_stage2.api.RetrofitClient;
 import com.example.android.popular_movies_stage2.model.domain.Movie;
+import com.example.android.popular_movies_stage2.repository.AppExecutors;
 import com.example.android.popular_movies_stage2.repository.MoviesDatabase;
 
 import androidx.annotation.Nullable;
@@ -26,20 +27,23 @@ public class DetailsViewModel extends ViewModel {
 
     private MutableLiveData<Boolean> isBookmarked = new MutableLiveData<>();
 
-
+    private MoviesDatabase database;
 
     public DetailsViewModel(MoviesDatabase database, final int movieId, final String apiKey) {
 
-        movieByRoom = database.getMovieDao().fetchMovieById(movieId);
+        this.database = database;
+
+        movieByRoom = this.database.getMovieDao().fetchMovieById(movieId);
 
         observableMovie.addSource(movieByRoom, new Observer<Movie>() {
             @Override
             public void onChanged(@Nullable Movie movie) {
                 if (movie != null) {
-                    observableMovie.setValue(movie);
+                    observableMovie.postValue(movie);
                     observableMovie.removeSource(movieByApi);
 
-                    isBookmarked.setValue(true);
+                    isBookmarked.postValue(true);
+
                 } else {
 
                     fetchMovieByAPI(movieId, apiKey);
@@ -47,9 +51,9 @@ public class DetailsViewModel extends ViewModel {
                     observableMovie.addSource(movieByApi, new Observer<Movie>() {
                         @Override
                         public void onChanged(@Nullable Movie movie) {
-                            observableMovie.setValue(movie);
+                            observableMovie.postValue(movie);
 
-                            isBookmarked.setValue(false);
+                            isBookmarked.postValue(false);
                         }
                     });
 
@@ -69,9 +73,9 @@ public class DetailsViewModel extends ViewModel {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 if (response.isSuccessful()) {
-                    movieByApi.setValue(response.body());
+                    movieByApi.postValue(response.body());
                 } else {
-                    movieByApi.setValue(null);
+                    movieByApi.postValue(null);
                 }
             }
 
@@ -82,6 +86,29 @@ public class DetailsViewModel extends ViewModel {
         });
 
     }
+
+    public void addBookmarkMovie(){
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                database.getMovieDao().saveMovie(observableMovie.getValue());
+                getIsBookmarked().postValue(false);
+            }
+        });
+
+    }
+
+    public void removeBookmarkedMovie(){
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                database.getMovieDao().deleteMovie(observableMovie.getValue());
+                getIsBookmarked().postValue(true);
+            }
+        });
+    }
+
+
 
     public MediatorLiveData<Movie> getObservableMovie() {
         return observableMovie;

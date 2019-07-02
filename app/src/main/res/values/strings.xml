@@ -1,7 +1,7 @@
 <resources>
   <string name="app_name">Popular Movies 2</string>
 
-  <string name="API_KEY_TMDB">xax</string>
+  <string name="API_KEY_TMDB">xxxxxxx</string>
 
   <string name="error_fetching_movies">Error while trying to fetch movies. Please check your internet connection</string>
   <string name="error_fetching_movie">Error while trying to fetch this movie. Please check your internet connection</string>
@@ -15,6 +15,11 @@
   <string name="overview">Overview:</string>
   <string name="details_error_message_title">Sorry</string>
   <string name="details_error_message_body">An error has occurred when trying to fetch this movie information</string>
+  <string name="no_favorites">You haven\'t added any movie to your favorite list</string>
 
+  <string name="criteria_default">TOP_RATED</string>
+  <string name="criteria_top_rated">TOP_RATED</string>
+  <string name="criteria_popular">POPULAR</string>
+  <string name="criteria_favorites">FAVORITES</string>
 
 </resources>

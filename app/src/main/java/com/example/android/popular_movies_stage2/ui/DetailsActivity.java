@@ -1,6 +1,9 @@
 package com.example.android.popular_movies_stage2.ui;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -10,6 +13,7 @@ import com.example.android.popular_movies_stage2.model.domain.Movie;
 import com.example.android.popular_movies_stage2.repository.MoviesDatabase;
 import com.example.android.popular_movies_stage2.viewmodel.DetailsViewModel;
 import com.example.android.popular_movies_stage2.viewmodel.DetailsViewModelFactory;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
@@ -29,8 +33,6 @@ public class DetailsActivity extends AppCompatActivity {
     ActivityDetailsBinding binding;
 
     private View movieInfoLayout;
-
-    private DetailsViewModelFactory detailsViewModelFactory;
 
     private DetailsViewModel detailsViewModel;
 
@@ -71,7 +73,7 @@ public class DetailsActivity extends AppCompatActivity {
     private void getMovieById() {
         setLoading();
 
-        detailsViewModelFactory = new DetailsViewModelFactory(moviesDatabase, movieId, apiKey);
+        DetailsViewModelFactory detailsViewModelFactory = new DetailsViewModelFactory(moviesDatabase, movieId, apiKey);
         detailsViewModel = ViewModelProviders.of(this, detailsViewModelFactory).get(DetailsViewModel.class);
 
         detailsViewModel.getObservableMovie().observe(this, new Observer<Movie>() {
@@ -117,7 +119,10 @@ public class DetailsActivity extends AppCompatActivity {
         String posterPath = Movie.BASE_POSTER_PATH.concat(movie.getPosterPath());
         Picasso.get().load(posterPath)
                 .error(R.drawable.ic_error_image)
+                .networkPolicy(NetworkPolicy.OFFLINE)
                 .into(binding.detailsMovieInformation.detailsMovieImage);
+
+
     }
 
     private String getMovieYear(String releaseDate) {
@@ -134,11 +139,9 @@ public class DetailsActivity extends AppCompatActivity {
         Boolean bookmarked = detailsViewModel.getIsBookmarked().getValue();
         if (bookmarked != null) {
             if (bookmarked) {
-                //TODO: REMOVE MOVIE FROM BOOKMARK
-                detailsViewModel.getIsBookmarked().setValue(false);
+                detailsViewModel.removeBookmarkedMovie();
             } else {
-                detailsViewModel.getIsBookmarked().setValue(true);
-                //TODO: ADD MOVIE TO BOOKMARK
+                detailsViewModel.addBookmarkMovie();
             }
         }
     }

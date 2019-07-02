@@ -56,8 +56,8 @@
   </style>
 
   <style name="DetailsFavorite" parent="DetailsInformation">
-    <item name="android:layout_width">48dp</item>
-    <item name="android:layout_height">48dp</item>
+    <item name="android:layout_width">@dimen/details_favorite_image_width</item>
+    <item name="android:layout_height">@dimen/details_favorite_image_height</item>
   </style>
 
   <style name="DetailsDescription">
@@ -105,6 +105,16 @@
     <item name="android:layout_marginBottom">@dimen/details_default_margin</item>
     <item name="android:textColor">@color/colorMainText</item>
     <item name="android:textSize">@dimen/details_error_message_title_size</item>
+  </style>
+
+  <style name="MovieListErrorMessage">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginStart">@dimen/details_default_margin_start</item>
+    <item name="android:layout_marginEnd">@dimen/details_default_margin_end</item>
+    <item name="android:textColor">@color/colorMainText</item>
+    <item name="android:textSize">@dimen/details_error_message_title_size</item>
+    <item name="android:visibility">gone</item>
   </style>
 
 </resources>

@@ -10,13 +10,14 @@ import com.example.android.popular_movies_stage2.model.domain.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
-    private ArrayList<Movie> movies = new ArrayList<>();
+    private List<Movie> movies = new ArrayList<>();
 
     private MovieClickListener movieClickListener;
 
@@ -45,7 +46,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return movies.size();
     }
 
-    void setMovies(ArrayList<Movie> movies) {
+    void setMovies(List<Movie> movies) {
         this.movies = movies;
         notifyDataSetChanged();
     }
