@@ -1,5 +1,6 @@
 package com.example.android.popular_movies_stage2.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -30,6 +31,8 @@ public class DetailsActivity extends AppCompatActivity {
 
     private String apiKey;
 
+    private String movieName;
+
     ActivityDetailsBinding binding;
 
     private View movieInfoLayout;
@@ -40,6 +43,9 @@ public class DetailsActivity extends AppCompatActivity {
 
     private ReviewAdapter reviewAdapter;
 
+    public static final String MOVIE_ID_EXTRA = "MOVIE_ID_EXTRA";
+
+    public static final String MOVIE_NAME_EXTRA = "MOVIE_NAME_EXTRA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +55,7 @@ public class DetailsActivity extends AppCompatActivity {
         //Just to show or hide info layout
         movieInfoLayout = findViewById(R.id.details_movie_information);
 
-        if (getIntent().hasExtra(MovieListActivity.MOVIE_ID_EXTRA)) {
+        if (getIntent().hasExtra(MOVIE_ID_EXTRA)) {
             movieId = getIntent().getIntExtra(MovieListActivity.MOVIE_ID_EXTRA, 0);
             apiKey = getString(R.string.API_KEY_TMDB);
 
@@ -57,7 +63,7 @@ public class DetailsActivity extends AppCompatActivity {
 
             getMovieById();
 
-            setFavoriteClick();
+            setupClicks();
 
             setupReviewAdapter();
 
@@ -69,11 +75,22 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
 
-    private void setFavoriteClick() {
+    private void setupClicks() {
+
         binding.detailsMovieInformation.detailsMovieFavoriteImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 bookmarkMovie();
+            }
+        });
+
+        binding.detailsMovieInformation.detailsMovieVideos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DetailsActivity.this, VideosListActivity.class);
+                intent.putExtra(MOVIE_ID_EXTRA, movieId);
+                intent.putExtra(MOVIE_NAME_EXTRA, movieName);
+                startActivity(intent);
             }
         });
     }
@@ -88,9 +105,9 @@ public class DetailsActivity extends AppCompatActivity {
         detailsViewModel.getObservableReviews().observe(this, new Observer<List<Review>>() {
             @Override
             public void onChanged(@Nullable List<Review> reviews) {
-                if(reviews != null){
+                if (reviews != null) {
                     handleReviewSuccess(reviews);
-                }else{
+                } else {
                     handleReviewError();
                 }
             }
@@ -131,7 +148,6 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
 
-        detailsViewModel.fetchMovieReviews(movieId, apiKey);
     }
 
 
@@ -154,6 +170,11 @@ public class DetailsActivity extends AppCompatActivity {
                 .networkPolicy(NetworkPolicy.OFFLINE)
                 .into(binding.detailsMovieInformation.detailsMovieImage);
 
+        movieName = movie.getOriginalTitle();
+
+        //After movie information has been displayed, fetch for movie reviews
+        detailsViewModel.fetchMovieReviews(movieId, apiKey);
+
 
     }
 
@@ -167,6 +188,7 @@ public class DetailsActivity extends AppCompatActivity {
 
 
     private void handleReviewSuccess(List<Review> reviews) {
+        binding.detailsReviewTitle.setVisibility(View.VISIBLE);
         binding.reviewsProgressBar.setVisibility(View.GONE);
 
         //In case there's no reviews for that movie, but no error occurred
@@ -182,6 +204,8 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void handleReviewError() {
+        binding.detailsReviewTitle.setVisibility(View.VISIBLE);
+
         binding.reviewsProgressBar.setVisibility(View.GONE);
 
         binding.detailsReviewsError.setVisibility(View.VISIBLE);
@@ -219,7 +243,6 @@ public class DetailsActivity extends AppCompatActivity {
         binding.detailsMovieOriginalTitle.setVisibility(View.GONE);
 
         binding.reviewsProgressBar.setVisibility(View.VISIBLE);
-
     }
 
 

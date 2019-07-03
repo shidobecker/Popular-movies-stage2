@@ -6,7 +6,7 @@ import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 
-public class VideosActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
+public class VideoActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
 
 
     @Override

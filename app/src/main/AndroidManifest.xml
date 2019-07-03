@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.example.android.popular_movies_stage2">
+
   <uses-permission android:name="android.permission.INTERNET" />
 
   <application
@@ -9,8 +10,8 @@
     android:label="@string/app_name"
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
-    android:usesCleartextTraffic="true"
-    android:theme="@style/AppTheme">
+    android:theme="@style/AppTheme"
+    android:usesCleartextTraffic="true">
     <activity android:name=".ui.MovieListActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
@@ -25,10 +26,15 @@
 
     </activity>
 
+    <activity
+      android:name=".ui.VideosListActivity"
+      android:parentActivityName=".ui.DetailsActivity">
+
+    </activity>
 
     <activity
-      android:name=".ui.VideosActivity"
-      android:parentActivityName=".ui.DetailsActivity">
+      android:name=".ui.VideoActivity"
+      android:parentActivityName=".ui.VideosListActivity">
 
     </activity>
 

@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/linearLayout2"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:padding="8dp"
-  android:orientation="vertical">
+  android:layout_margin="@dimen/default_small_margin"
+  app:cardCornerRadius="6dp"
+  android:elevation="6dp">
 
-  <ImageView
-    android:id="@+id/imageView"
-    android:layout_width="wrap_content"
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp"
-    android:tint="@color/black"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:srcCompat="@android:drawable/ic_media_play" />
+    android:orientation="vertical"
+    android:padding="8dp">
 
-  <TextView
-    android:id="@+id/movie_list_name"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="20dp"
-    android:text="Trailer"
-    app:layout_constraintStart_toEndOf="@+id/imageView"
-    app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+      android:id="@+id/imageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/default_small_margin"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:srcCompat="@drawable/ic_youtube_logo_1" />
 
-  <View
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/movie_list_name"
-    style="@style/VideosListDivider" />
+    <TextView
+      android:id="@+id/video_list_name"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/details_default_margin_start"
+      android:layout_marginEnd="@dimen/details_default_margin_end"
+      android:layout_marginTop="@dimen/default_medium_margin"
+      app:layout_constraintStart_toEndOf="@+id/imageView"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:text="Trailer" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

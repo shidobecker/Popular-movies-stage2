@@ -173,7 +173,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieAdapter
     @Override
     public void onClickMovie(int id) {
         Intent intent = new Intent(this, DetailsActivity.class);
-        intent.putExtra(MOVIE_ID_EXTRA, id);
+        intent.putExtra(DetailsActivity.MOVIE_ID_EXTRA, id);
         startActivity(intent);
     }
 
