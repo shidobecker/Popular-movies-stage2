@@ -1,5 +1,8 @@
 package com.example.android.popular_movies_stage2.ui;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -8,19 +11,18 @@ import android.widget.Toast;
 import com.example.android.popular_movies_stage2.R;
 import com.example.android.popular_movies_stage2.databinding.ActivityVideosListBinding;
 import com.example.android.popular_movies_stage2.model.domain.Video;
+import com.example.android.popular_movies_stage2.utils.VideoWebsite;
 import com.example.android.popular_movies_stage2.viewmodel.VideoListViewModel;
 import com.example.android.popular_movies_stage2.viewmodel.VideoListViewModelFactory;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
-
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ShareCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -32,9 +34,7 @@ public class VideosListActivity extends AppCompatActivity implements VideoAdapte
 
     private int movieId;
 
-    private String movieName;
-
-    ActivityVideosListBinding binding;
+    private ActivityVideosListBinding binding;
 
     private VideoListViewModel viewModel;
 
@@ -48,7 +48,7 @@ public class VideosListActivity extends AppCompatActivity implements VideoAdapte
 
         if (getIntent().hasExtra(DetailsActivity.MOVIE_ID_EXTRA)) {
             movieId = getIntent().getIntExtra(DetailsActivity.MOVIE_ID_EXTRA, 0);
-            movieName = getIntent().getStringExtra(DetailsActivity.MOVIE_NAME_EXTRA);
+            String movieName = getIntent().getStringExtra(DetailsActivity.MOVIE_NAME_EXTRA);
             apiKey = getString(R.string.API_KEY_TMDB);
 
             getSupportActionBar().setTitle(movieName);
@@ -71,7 +71,6 @@ public class VideosListActivity extends AppCompatActivity implements VideoAdapte
     private void setupViewModel() {
         VideoListViewModelFactory factory = new VideoListViewModelFactory(movieId, apiKey);
         viewModel = ViewModelProviders.of(this, factory).get(VideoListViewModel.class);
-
     }
 
     private void setupAdapter() {
@@ -99,6 +98,9 @@ public class VideosListActivity extends AppCompatActivity implements VideoAdapte
             binding.videosErrorMessage.setVisibility(View.VISIBLE);
             binding.videosErrorMessage.setText(R.string.videos_no_videos_found);
             binding.videosRecyclerView.setVisibility(View.GONE);
+
+            binding.youtubePlayerView.setVisibility(View.GONE);
+            binding.youtubePlayerView.release();
         } else {
             binding.videosErrorMessage.setVisibility(View.GONE);
             binding.videosRecyclerView.setVisibility(View.VISIBLE);
@@ -125,17 +127,20 @@ public class VideosListActivity extends AppCompatActivity implements VideoAdapte
         binding.videosRecyclerView.setVisibility(View.GONE);
 
         binding.videosErrorMessage.setText(R.string.videos_list_connection_message);
+
+        binding.youtubePlayerView.setVisibility(View.GONE);
+        binding.youtubePlayerView.release();
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int i = item.getItemId();
+        if (i == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -147,17 +152,36 @@ public class VideosListActivity extends AppCompatActivity implements VideoAdapte
     }
 
     @Override
-    public void onClickVideoPlay(final String videoKey) {
-        binding.youtubePlayerView.getYouTubePlayerWhenReady(new YouTubePlayerCallback() {
-            @Override
-            public void onYouTubePlayer(YouTubePlayer youTubePlayer) {
-                youTubePlayer.loadVideo(videoKey, 0);
-            }
-        });
+    public void onClickVideoPlay(String videoKey, String webSite) {
+        Intent appIntent;
+
+        Intent webIntent;
+
+        if (webSite.equalsIgnoreCase(VideoWebsite.YOUTUBE.name())) {
+            appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.youtube_base_app) + videoKey));
+            webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.youtube_base_url) + videoKey));
+        } else {
+            appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.vimeo_base_app) + videoKey));
+            webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.vimeo_base_url) + videoKey));
+        }
+
+        try {
+            startActivity(appIntent);
+        } catch (ActivityNotFoundException ex) {
+            startActivity(webIntent);
+        }
+
     }
 
     @Override
     public void onClickShare(Video video) {
-        //TODO
+        String mimeType = "text/plain";
+
+        ShareCompat.IntentBuilder
+                .from(this)
+                .setType(mimeType)
+                .setChooserTitle(video.getName())
+                .setText(getString(R.string.youtube_base_url) + video.getKey())
+                .startChooser();
     }
 }

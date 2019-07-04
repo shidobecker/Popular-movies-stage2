@@ -2,10 +2,8 @@ package com.example.android.popular_movies_stage2.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +38,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieAdapter
 
     private MovieListViewModel viewModel;
 
-    ActivityMovieListBinding binding;
+    private ActivityMovieListBinding binding;
 
     private MoviesDatabase database;
 
@@ -159,7 +157,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieAdapter
         binding.moviesRecyclerView.setAdapter(movieAdapter);
     }
 
-    public int calculateNoOfColumns() {
+    private int calculateNoOfColumns() {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
         int scalingFactor = 200;

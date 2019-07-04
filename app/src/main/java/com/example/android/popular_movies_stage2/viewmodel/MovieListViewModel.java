@@ -17,7 +17,7 @@ import retrofit2.Response;
 
 public class MovieListViewModel extends ViewModel {
 
-    private MutableLiveData<List<Movie>> observableMovies = new MutableLiveData<>();
+    private final MutableLiveData<List<Movie>> observableMovies = new MutableLiveData<>();
 
     private MutableLiveData<Boolean> hasFavoriteMovies = new MutableLiveData<>();
 

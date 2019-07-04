@@ -6,7 +6,7 @@ public enum SearchCriteria {
     POPULAR("POPULAR"),
     FAVORITES("FAVORITES");
 
-    String name;
+    final String name;
 
     SearchCriteria(String name) {
         this.name = name;

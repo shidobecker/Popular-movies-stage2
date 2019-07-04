@@ -13,7 +13,7 @@ public class MoviesPreferences {
 
     private static SharedPreferences sharedPrefs;
 
-    public static SharedPreferences getPrefs(Context context) {
+    private static SharedPreferences getPrefs(Context context) {
 
         if (sharedPrefs == null) {
             sharedPrefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE);

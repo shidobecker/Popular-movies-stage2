@@ -15,7 +15,7 @@ import retrofit2.Response;
 
 public class VideoListViewModel extends ViewModel {
 
-    private MutableLiveData<List<Video>> observableVideos = new MutableLiveData<>();
+    private final MutableLiveData<List<Video>> observableVideos = new MutableLiveData<>();
 
     public VideoListViewModel(final int movieId, final String apiKey) {
         MoviesApi moviesApi = RetrofitClient.getInstance(apiKey).getRetrofit().create(MoviesApi.class);

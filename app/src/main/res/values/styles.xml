@@ -51,7 +51,7 @@
 
   <style name="DetailsVideo" parent="DetailsInformation">
     <item name="android:textAppearance">@style/TextAppearance.AppCompat.Headline</item>
-    <item name="android:textColor">@color/colorMainText</item>
+    <item name="android:textColor">@color/colorAccent</item>
     <item name="android:layout_marginTop">@dimen/default_medium_margin</item>
   </style>
 
@@ -164,6 +164,59 @@
     <item name="android:layout_marginBottom">@dimen/default_small_margin</item>
     <item name="android:textColor">@color/colorMainText</item>
     <item name="android:visibility">gone</item>
+    <item name="android:textSize">@dimen/details_error_message_title_size</item>
+  </style>
+
+  <style name="YoutubePlayerView">
+    <item name="android:layout_marginStart">@dimen/default_small_margin</item>
+    <item name="android:layout_marginTop">@dimen/default_small_margin</item>
+    <item name="android:layout_marginEnd">@dimen/default_small_margin</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+  </style>
+
+  <style name="VideoListCardView">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_margin">@dimen/default_small_margin</item>
+    <item name="android:elevation">6dp</item>
+  </style>
+
+  <style name="VideoListLogo">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_margin">@dimen/default_small_margin</item>
+  </style>
+
+  <style name="VideoListTitle">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginStart">@dimen/details_default_margin_start</item>
+    <item name="android:layout_marginTop">@dimen/default_medium_margin</item>
+    <item name="android:layout_marginEnd">8dp</item>
+  </style>
+
+  <style name="VideoListShare">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginStart">@dimen/default_small_margin</item>
+    <item name="android:layout_marginTop">@dimen/default_small_margin</item>
+    <item name="android:layout_marginEnd">@dimen/default_small_margin</item>
+    <item name="android:tint">@color/colorMainText</item>
+  </style>
+
+  <style name="MovieListItemImage">
+    <item name="android:minWidth">@dimen/details_poster_list_width</item>
+    <item name="android:minHeight">@dimen/details_poster_list_height</item>
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:scaleType">fitXY</item>
+  </style>
+
+  <style name="ReviewsRecyclerView">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginTop">@dimen/default_small_margin</item>
   </style>
 
 </resources>

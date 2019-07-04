@@ -2,9 +2,9 @@
 <resources>
 
   <dimen name="details_title_container_height">120dp</dimen>
-  
-<!--  <dimen name="details_poster_min_height">270dp</dimen>
-  <dimen name="details_poster_min_width">185dp</dimen>-->
+
+  <dimen name="details_poster_list_height">270dp</dimen>
+  <dimen name="details_poster_list_width">185dp</dimen>
 
   <dimen name="details_default_margin">8dp</dimen>
 

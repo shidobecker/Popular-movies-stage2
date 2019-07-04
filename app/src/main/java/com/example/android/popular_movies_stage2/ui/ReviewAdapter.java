@@ -43,7 +43,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
     class ReviewViewHolder extends RecyclerView.ViewHolder {
 
-        TextView author;
+        final TextView author;
 
         TextView content;
 
@@ -53,7 +53,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         }
 
 
-        public ReviewViewHolder(@NonNull View itemView) {
+        ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
             author = itemView.findViewById(R.id.review_list_author);
             content = itemView.findViewById(R.id.review_list_content);

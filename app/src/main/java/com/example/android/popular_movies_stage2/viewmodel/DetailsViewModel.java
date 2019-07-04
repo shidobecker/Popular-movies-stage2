@@ -23,13 +23,11 @@ import retrofit2.Response;
 
 public class DetailsViewModel extends ViewModel {
 
-    private LiveData<Movie> movieByRoom;
-
     private MutableLiveData<Movie> movieByApi = new MutableLiveData<>();
 
-    private MediatorLiveData<Movie> observableMovie = new MediatorLiveData<>();
+    private final MediatorLiveData<Movie> observableMovie = new MediatorLiveData<>();
 
-    private MutableLiveData<List<Review>> observableReviews = new MutableLiveData<>() ;
+    private MutableLiveData<List<Review>> observableReviews = new MutableLiveData<>();
 
     private MutableLiveData<Boolean> isBookmarked = new MutableLiveData<>();
 
@@ -39,7 +37,7 @@ public class DetailsViewModel extends ViewModel {
 
         this.database = database;
 
-        movieByRoom = this.database.getMovieDao().fetchMovieById(movieId);
+        LiveData<Movie> movieByRoom = this.database.getMovieDao().fetchMovieById(movieId);
 
         observableMovie.addSource(movieByRoom, new Observer<Movie>() {
             @Override
@@ -71,7 +69,7 @@ public class DetailsViewModel extends ViewModel {
     }
 
 
-    public void fetchMovieByAPI(int movieId, String apiKey) {
+    private void fetchMovieByAPI(int movieId, String apiKey) {
         MoviesApi moviesApi = RetrofitClient.getInstance(apiKey).getRetrofit().create(MoviesApi.class);
         final Call<Movie> movieById = moviesApi.getMovieById(movieId);
 
@@ -122,9 +120,9 @@ public class DetailsViewModel extends ViewModel {
         call.enqueue(new Callback<ReviewResult>() {
             @Override
             public void onResponse(Call<ReviewResult> call, Response<ReviewResult> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     observableReviews.postValue(response.body().getReviews());
-                }else{
+                } else {
                     observableReviews.postValue(null);
                 }
             }

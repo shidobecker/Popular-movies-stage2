@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 public class VideoListViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
-    private int movieId;
+    private final int movieId;
 
-    private String apiKey;
+    private final String apiKey;
 
 
     public VideoListViewModelFactory(int movieId, String apiKey) {

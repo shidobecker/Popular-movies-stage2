@@ -3,11 +3,8 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  android:layout_margin="@dimen/default_small_margin"
   app:cardCornerRadius="6dp"
-  android:elevation="6dp">
+  style="@style/VideoListCardView">
 
   <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
@@ -16,24 +13,35 @@
     android:padding="8dp">
 
     <ImageView
-      android:id="@+id/imageView"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_margin="@dimen/default_small_margin"
+      android:id="@+id/video_list_logo"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
+      style="@style/VideoListLogo"
       app:srcCompat="@drawable/ic_youtube_logo_1" />
 
     <TextView
       android:id="@+id/video_list_name"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/details_default_margin_start"
-      android:layout_marginEnd="@dimen/details_default_margin_end"
-      android:layout_marginTop="@dimen/default_medium_margin"
-      app:layout_constraintStart_toEndOf="@+id/imageView"
+      style="@style/VideoListTitle"
+      app:layout_constrainedWidth="true"
+      app:layout_constraintEnd_toStartOf="@+id/guideline"
+      app:layout_constraintStart_toEndOf="@+id/video_list_logo"
       app:layout_constraintTop_toTopOf="parent"
       tools:text="Trailer" />
+
+    <ImageView
+      android:id="@+id/video_list_share"
+      style="@style/VideoListShare"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/guideline"
+      app:layout_constraintTop_toTopOf="parent"
+      app:srcCompat="@android:drawable/ic_menu_share" />
+
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="0.8" />
 
 
   </androidx.constraintlayout.widget.ConstraintLayout>

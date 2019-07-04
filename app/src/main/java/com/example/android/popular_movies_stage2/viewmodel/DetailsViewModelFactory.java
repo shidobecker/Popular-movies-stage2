@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 public class DetailsViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
-    private MoviesDatabase database;
+    private final MoviesDatabase database;
 
     private int movieId;
 

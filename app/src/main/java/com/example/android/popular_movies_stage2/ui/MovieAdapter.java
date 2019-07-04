@@ -19,7 +19,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     private List<Movie> movies = new ArrayList<>();
 
-    private MovieClickListener movieClickListener;
+    private final MovieClickListener movieClickListener;
 
     interface MovieClickListener{
         void onClickMovie(int id);

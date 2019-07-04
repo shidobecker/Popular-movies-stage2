@@ -2,7 +2,6 @@ package com.example.android.popular_movies_stage2.model.domain;
 
 import com.google.gson.annotations.SerializedName;
 
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -29,7 +28,6 @@ public class Movie {
 
     @SerializedName("release_date")
     private String releaseDate;
-
 
 
     public Movie(int id, String originalTitle, String posterPath, String overview, Float userRating, String releaseDate) {

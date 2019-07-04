@@ -2,6 +2,7 @@ package com.example.android.popular_movies_stage2.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -33,7 +34,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     private String movieName;
 
-    ActivityDetailsBinding binding;
+    private ActivityDetailsBinding binding;
 
     private View movieInfoLayout;
 
@@ -175,7 +176,6 @@ public class DetailsActivity extends AppCompatActivity {
         //After movie information has been displayed, fetch for movie reviews
         detailsViewModel.fetchMovieReviews(movieId, apiKey);
 
-
     }
 
     private void handleMovieError() {
@@ -243,6 +243,17 @@ public class DetailsActivity extends AppCompatActivity {
         binding.detailsMovieOriginalTitle.setVisibility(View.GONE);
 
         binding.reviewsProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int i = item.getItemId();
+        if (i == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
 
