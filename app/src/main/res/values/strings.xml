@@ -1,7 +1,7 @@
 <resources>
   <string name="app_name">Popular Movies 2</string>
 
-  <string name="API_KEY_TMDB">x</string>
+  <string name="API_KEY_TMDB"></string>
 
   <string name="youtube_base_url">http://www.youtube.com/watch?v=</string>
   <string name="vimeo_base_url">https://vimeo.com/</string>

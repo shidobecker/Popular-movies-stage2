@@ -33,7 +33,7 @@ public class DetailsViewModel extends ViewModel {
 
     private MoviesDatabase database;
 
-    public DetailsViewModel(MoviesDatabase database, final int movieId, final String apiKey) {
+    DetailsViewModel(MoviesDatabase database, final int movieId, final String apiKey) {
 
         this.database = database;
 

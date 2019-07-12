@@ -9,7 +9,10 @@ import com.example.android.popular_movies_stage2.repository.MoviesDatabase;
 
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -17,7 +20,7 @@ import retrofit2.Response;
 
 public class MovieListViewModel extends ViewModel {
 
-    private final MutableLiveData<List<Movie>> observableMovies = new MutableLiveData<>();
+    private final MediatorLiveData<List<Movie>> observableMovies = new MediatorLiveData<>();
 
     private MutableLiveData<Boolean> hasFavoriteMovies = new MutableLiveData<>();
 
@@ -25,7 +28,7 @@ public class MovieListViewModel extends ViewModel {
 
     private MoviesDatabase database;
 
-    public MovieListViewModel(String apiKey, MoviesDatabase database) {
+    MovieListViewModel(String apiKey, MoviesDatabase database) {
         this.apiKey = apiKey;
         this.database = database;
     }
@@ -79,14 +82,22 @@ public class MovieListViewModel extends ViewModel {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                List<Movie> favorites = database.getMovieDao().fetchMovies();
-                if (favorites != null && !favorites.isEmpty()) {
-                    //No need to update movies if there's no favorite movie saved
-                    hasFavoriteMovies.postValue(true);
-                    observableMovies.postValue(favorites);
-                } else {
-                    hasFavoriteMovies.postValue(false);
-                }
+                LiveData<List<Movie>> favoritesByRoom = database.getMovieDao().fetchMovies();
+
+                observableMovies.addSource(favoritesByRoom, new Observer<List<Movie>>() {
+                    @Override
+                    public void onChanged(List<Movie> movies) {
+                        if (movies != null && !movies.isEmpty()) {
+                            //No need to update movies if there's no favorite movie saved
+                            hasFavoriteMovies.postValue(true);
+                            observableMovies.postValue(movies);
+                        } else {
+                            hasFavoriteMovies.postValue(false);
+                        }
+                    }
+                });
+
+
 
             }
         });

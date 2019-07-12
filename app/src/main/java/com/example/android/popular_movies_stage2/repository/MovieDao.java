@@ -17,7 +17,7 @@ public interface MovieDao {
     LiveData<Movie> fetchMovieById(int id);
 
     @Query("SELECT * FROM movie")
-    List<Movie> fetchMovies();
+    LiveData<List<Movie>> fetchMovies();
 
     @Insert
     void saveMovie(Movie movie);
